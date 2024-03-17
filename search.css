@@ -1,0 +1,102 @@
+body {
+    background-color: #191414;
+}
+
+a {
+    width: fit-content;
+    text-decoration: none;
+    color: inherit;
+  }
+
+a:hover {
+    text-decoration: underline;
+}
+
+.navbar {
+    background-color: #1db954;
+    padding: 5px;
+}
+
+.navbar .logo {
+    display: flex;
+    align-items: center;
+    height: auto;
+    gap: 5px;
+}
+
+.navbar .logo a {
+    font-size: 18px;
+}
+
+.navbar .container {
+    display: flex;
+}
+
+#searchButton {
+    color: white;
+    border-color: #191414;
+}
+
+.search {
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: auto auto;
+    align-items: center;
+    gap: 10px;
+}
+
+.section {
+    display: grid;
+    grid-template-columns: 70%;
+    justify-content: center;
+    align-items: center;
+    margin: 30px;
+}
+
+.table {
+    color: grey;
+    border-radius: 10px;
+}
+
+.table img {
+    width: 50px;
+}
+
+.table th,
+.table td {
+    vertical-align: middle; /* Mengatur semua elemen <th> dan <td> untuk berada di tengah secara vertikal */
+}
+
+.title {
+    display: flex;
+    gap: 5px;
+}
+
+.title-text {
+    color: white;
+}
+
+.artist-text {
+    color: grey;
+}
+
+.title-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-body {
+    display: grid;
+    grid-template-rows: auto auto;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-text {
+    display: flex;
+    justify-content: center;
+}
+
+.card img {
+    width: 20%;
+}

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="search.css">
+    <title>Search</title>
+</head>
+<body>
+    <nav class="navbar">
+        
+        <div class="container-fluid">
+            <div class="logo">
+                <img src="asset/logo.svg" alt="">
+                <a href="spotipai.html" class="navbar-brand">Spotipai</a>
+            </div>
+            
+          <div class="search">
+            <input id="searchInput" class="" type="text" placeholder="Search" aria-label="Search">
+            <button id="searchButton" class="btn btn-outline-success">Search</button>
+          </div>
+          
+        </div>
+    </nav>
+
+      <div class="section">
+            <table class="table table-dark">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Album</th>
+                        <th>Durasi</th>
+                    </tr>
+                </thead>
+                
+                <tbody class="tbody">
+
+                </tbody>
+            </table>
+      </div>
+
+      <script>
+        const section = document.querySelector('.section')
+        const tbody = document.querySelector('tbody')
+        const input = document.querySelector('#searchInput')
+
+        
+        // const showCard = (data) => {
+        //     let output = ''
+
+        //         data.tracks.items.forEach(item => {
+                
+        //         const title = item.data.name
+        //         const artist = item.data.artists.items[0].profile.name
+        //         const imgUrl = item.data.albumOfTrack.coverArt.sources[0].url
+                
+        //         output += `
+        //             <div class="card d-flex flex-row">
+        //                 <img src=${imgUrl} class="card-img-top" alt="...">
+        //                 <div class="card-body">
+        //                     <h5 class="card-text">${title}</h5>
+        //                     <p class="card-text">${artist}</p>
+        //                 </div>
+        //             </div>
+        //         `
+               
+        //         })
+        //         section.innerHTML = output;
+        // }
+
+        function formatDuration(duration) {
+            const minutes = Math.floor(duration / 60000);
+            const seconds = Math.floor((duration % 60000) / 1000);
+            return `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+        }
+
+        const showTable = (data) => {
+            let n = 1
+            let output = ''
+
+                data.tracks.items.forEach(item => {
+                
+                const title = item.data.name
+                const titleUrl = item.data.uri
+                const artist = item.data.artists.items[0].profile.name
+                const artistUrl = item.data.artists.items[0].uri
+                const imgUrl = item.data.albumOfTrack.coverArt.sources[0].url
+                const album = item.data.albumOfTrack.name
+                const albumUrl = item.data.albumOfTrack.uri
+                const duration = item.data.duration.totalMilliseconds
+                
+                output += `
+                <tr>
+                    <td class="number">${n}</td>
+                    <td class="title">
+                        <img src=${imgUrl}>
+                        <div class="title-column">
+                            <a class="title-text" href="${titleUrl}">${title}</a> 
+                            <a class="artist-text"  href="${artistUrl}">${artist}</a>
+                        </div>
+                    </td>
+                    <td class="album"><a href="${albumUrl}">${album}</a></td>
+                    <td class="duration">${formatDuration(duration)}</td>
+                </tr>
+                `
+                n++
+                })
+                
+                tbody.innerHTML = output;
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchQuery = urlParams.get("q");
+
+            function search() {
+                const searchQuery = searchInput.value.trim();
+                if (searchQuery === "") {
+                    alert("Mohon masukkan kata kunci pencarian.");
+                    return;
+                }
+
+                const url = `https://spotify23.p.rapidapi.com/search/?q=${encodeURIComponent(searchQuery)}&type=multi&offset=0&limit=10&numberOfTopResults=5`;
+                const options = {
+                method: 'GET',
+                headers: {
+                    'X-RapidAPI-Key': '9ef96d9f78msh978413b387bbb72p191eb0jsne9e1b0dd313a',
+                    'X-RapidAPI-Host': 'spotify23.p.rapidapi.com'
+                }
+                };
+
+                fetch(url, options)
+                .then(response => {
+                    if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    showTable(result);
+                    console.log(result.tracks.items[0].data.name);
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:'), error;
+                });
+            }
+
+            if (searchQuery) {
+                const searchButton = document.getElementById("searchButton");
+                searchButton.addEventListener("click", search);
+
+                const searchInput = document.getElementById("searchInput");
+                searchInput.value = decodeURIComponent(searchQuery);
+                searchInput.addEventListener("keydown", function(event) {
+                    if (event.key === "Enter") {
+                    search();
+                    }
+                });
+                search()
+            }
+        });
+      </script>
+</body>
+</html>
